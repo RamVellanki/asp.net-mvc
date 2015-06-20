@@ -22,3 +22,15 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+.nav > li.nav-header{
+    cursor: default;
+    font-size: 22px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+#sidebar{
+    background-color: white;
+}
