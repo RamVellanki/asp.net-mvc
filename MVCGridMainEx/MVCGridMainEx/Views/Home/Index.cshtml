@@ -1,0 +1,15 @@
+﻿@model IEnumerable<MVCGridMainEx.Models.Lab>
+@using GridMvc.Html
+
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@Html.Grid(Model).Columns(columns =>
+                              {
+                                  columns.Add(lab => lab.Title).Titled("Lab Title");
+                                  columns.Add(lab => lab.LicenseNo).Titled("License No").Sortable(true);
+                                  columns.Add(lab => lab.Owner).Titled("Owner");
+                                  columns.Add(lab => lab.ReceivedDate).Titled("Application Received Dt").Sortable(true);
+                                  columns.Add(lab => lab.Status).Titled("Lab Status");
+                              }).WithPaging(2)

@@ -1,0 +1,38 @@
+﻿@model IEnumerable<HotelsEFSP.Models.Order>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>@Html.DisplayNameFor(model => model.id) </th>
+        <th>@Html.DisplayNameFor(model => model.BillAmount) </th>
+        <th>@Html.DisplayNameFor(model => model.Tax) </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BillAmount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tax)
+            </td>
+            <td>
+                @Html.ActionLink("CalcTax", "CalcTax", new {id = item.id })
+            </td>
+        </tr>
+    }
+
+</table>

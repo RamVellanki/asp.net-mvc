@@ -1,0 +1,244 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="DefTrackModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Defects">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Prod_Id" Type="int" Nullable="false" />
+          <Property Name="Rel_Id" Type="int" Nullable="false" />
+          <Property Name="Defect_Description" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Developer" Type="varchar" MaxLength="20" />
+          <Property Name="Created_Date" Type="date" Nullable="false" />
+          <Property Name="Status" Type="varchar" MaxLength="10" Nullable="false" />
+          <Property Name="Resolution" Type="varchar" MaxLength="50" />
+          <Property Name="Closed_Date" Type="date" />
+        </EntityType>
+        <EntityType Name="Products">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="ProductName" Type="varchar" MaxLength="20" />
+        </EntityType>
+        <EntityType Name="Releases">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Prod_Id" Type="int" Nullable="false" />
+          <Property Name="Product_Name" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Defects_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Defects" Type="Self.Defects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Defects">
+              <PropertyRef Name="Prod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Defects_Releases">
+          <End Role="Releases" Type="Self.Releases" Multiplicity="1" />
+          <End Role="Defects" Type="Self.Defects" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Releases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Defects">
+              <PropertyRef Name="Rel_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Releases_Products">
+          <End Role="Products" Type="Self.Products" Multiplicity="1" />
+          <End Role="Releases" Type="Self.Releases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Releases">
+              <PropertyRef Name="Prod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DefTrackModelStoreContainer">
+          <EntitySet Name="Defects" EntityType="Self.Defects" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Releases" EntityType="Self.Releases" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Defects_Products" Association="Self.FK_Defects_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Defects" EntitySet="Defects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Defects_Releases" Association="Self.FK_Defects_Releases">
+            <End Role="Releases" EntitySet="Releases" />
+            <End Role="Defects" EntitySet="Defects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Releases_Products" Association="Self.FK_Releases_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Releases" EntitySet="Releases" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DefTrackModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Defect">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Prod_Id" Type="Int32" Nullable="false" />
+          <Property Name="Rel_Id" Type="Int32" Nullable="false" />
+          <Property Name="Defect_Description" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Developer" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Created_Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Status" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Resolution" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Closed_Date" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Defects_Products" FromRole="Defects" ToRole="Products" />
+          <NavigationProperty Name="Release" Relationship="Self.FK_Defects_Releases" FromRole="Defects" ToRole="Releases" />
+        </EntityType>
+        <EntityType Name="Product">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="ProductName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Defects" Relationship="Self.FK_Defects_Products" FromRole="Products" ToRole="Defects" />
+          <NavigationProperty Name="Releases" Relationship="Self.FK_Releases_Products" FromRole="Products" ToRole="Releases" />
+        </EntityType>
+        <EntityType Name="Release">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Prod_Id" Type="Int32" Nullable="false" />
+          <Property Name="Product_Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Defects" Relationship="Self.FK_Defects_Releases" FromRole="Releases" ToRole="Defects" />
+          <NavigationProperty Name="Product" Relationship="Self.FK_Releases_Products" FromRole="Releases" ToRole="Products" />
+        </EntityType>
+        <Association Name="FK_Defects_Products">
+          <End Role="Products" Type="Self.Product" Multiplicity="1" />
+          <End Role="Defects" Type="Self.Defect" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Defects">
+              <PropertyRef Name="Prod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Defects_Releases">
+          <End Role="Releases" Type="Self.Release" Multiplicity="1" />
+          <End Role="Defects" Type="Self.Defect" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Releases">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Defects">
+              <PropertyRef Name="Rel_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Releases_Products">
+          <End Role="Products" Type="Self.Product" Multiplicity="1" />
+          <End Role="Releases" Type="Self.Release" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Products">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Releases">
+              <PropertyRef Name="Prod_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="DefTrackEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Defects" EntityType="Self.Defect" />
+          <EntitySet Name="Products" EntityType="Self.Product" />
+          <EntitySet Name="Releases" EntityType="Self.Release" />
+          <AssociationSet Name="FK_Defects_Products" Association="Self.FK_Defects_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Defects" EntitySet="Defects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Defects_Releases" Association="Self.FK_Defects_Releases">
+            <End Role="Releases" EntitySet="Releases" />
+            <End Role="Defects" EntitySet="Defects" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Releases_Products" Association="Self.FK_Releases_Products">
+            <End Role="Products" EntitySet="Products" />
+            <End Role="Releases" EntitySet="Releases" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DefTrackModelStoreContainer" CdmEntityContainer="DefTrackEntities">
+          <EntitySetMapping Name="Defects">
+            <EntityTypeMapping TypeName="DefTrackModel.Defect">
+              <MappingFragment StoreEntitySet="Defects">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Prod_Id" ColumnName="Prod_Id" />
+                <ScalarProperty Name="Rel_Id" ColumnName="Rel_Id" />
+                <ScalarProperty Name="Defect_Description" ColumnName="Defect_Description" />
+                <ScalarProperty Name="Developer" ColumnName="Developer" />
+                <ScalarProperty Name="Created_Date" ColumnName="Created_Date" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Resolution" ColumnName="Resolution" />
+                <ScalarProperty Name="Closed_Date" ColumnName="Closed_Date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Products">
+            <EntityTypeMapping TypeName="DefTrackModel.Product">
+              <MappingFragment StoreEntitySet="Products">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ProductName" ColumnName="ProductName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Releases">
+            <EntityTypeMapping TypeName="DefTrackModel.Release">
+              <MappingFragment StoreEntitySet="Releases">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Prod_Id" ColumnName="Prod_Id" />
+                <ScalarProperty Name="Product_Name" ColumnName="Product_Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
