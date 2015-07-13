@@ -1,0 +1,113 @@
+﻿@model KOMVCApp.Models.ProductModel
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+<form data-bind="submit:addProduct">
+    <div class="row">
+        @Html.LabelFor(model => model.ProdId, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.ProdName, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.ProdOwner, htmlAttributes: new { @class = "control-label col-md-2" })
+        @Html.LabelFor(model => model.NumOfVersions, htmlAttributes: new { @class = "control-label col-md-2" })
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            <input type="text" class="required form-control" data-bind="value: ProdIdToAdd">
+        </div>
+        <div class="col-md-2">
+            <input class="required form-control" data-bind="value: ProdNameToAdd">
+        </div>
+        <div class="col-md-2">
+            <input class="required form-control" data-bind="value: ProdOwnerToAdd">
+        </div>
+        <div class="col-md-2">
+            <input class="required form-control" data-bind="value: NumOfVersionsToAdd">
+        </div>
+        <button class="btn btn-default" data-bind='click: addProduct'>Add</button>
+    </div>
+</form>
+<br />
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProdId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProdName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProdOwner)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumOfVersions)
+        </th>
+        <th></th>
+    </tr>
+
+    <tbody data-bind="foreach: allProducts">
+        <tr>
+            <td data-bind="text: ProdId"></td>
+            <td data-bind="text: ProdName"></td>
+            <td data-bind="text: ProdOwner"></td>
+            <td data-bind="text: NumOfVersions"></td>
+
+            <td>
+                <button class="btn btn-default" data-bind='click: $root.removeProduct'>Remove</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div>
+    <button class="btn btn-default" data-bind='click: saveProductsToServer'>Save</button>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/knockout-3.3.0.js"></script>
+    <script src="~/Scripts/knockout.mapping-latest.js"></script>
+    <script>
+        //Product structure
+        function Product(data) {
+            this.ProdId = data.ProdId;
+            this.ProdName = data.ProdName;
+            this.ProdOwner = data.ProdOwner;
+            this.NumOfVersions = data.NumOfVersions;
+        };
+
+        //Existing products
+        var existingProducts = [new Product({ ProdId: '1', ProdName: 'Oliver', ProdOwner: 'Ram', NumOfVersions: '2' }),
+                               new Product({ ProdId: '2', ProdName: 'Red', ProdOwner: 'Chandra', NumOfVersions: '3' }),
+                               new Product({ ProdId: '3', ProdName: 'Yellow', ProdOwner: 'Siri', NumOfVersions: '1' }),
+                               new Product({ ProdId: '4', ProdName: 'Greedn', ProdOwner: 'Abhi', NumOfVersions: '3' })];
+
+        var ProductModel = function (products) {
+            var self = this;
+            self.allProducts = ko.observableArray(existingProducts);
+            self.ProdIdToAdd = ko.observable("");
+            self.ProdNameToAdd = ko.observable("");
+            self.ProdOwnerToAdd = ko.observable("");
+            self.NumOfVersionsToAdd = ko.observable("");
+
+
+            this.addProduct = function (product) {
+                self.allProducts.push(new Product({
+                    ProdId: this.ProdIdToAdd(), ProdName: this.ProdNameToAdd(),
+                    ProdOwner: this.ProdOwnerToAdd(), NumOfVersions: this.NumOfVersionsToAdd()}));
+            };
+
+            this.removeProduct = function (gift) {
+                self.allProducts.remove(gift);
+            };
+
+            this.saveProductsToServer = function () {
+                var productModel = ko.mapping.toJS(self.allProducts);
+                var x = ko.utils.postJson("/Home/SaveProducts", { products: productModel });
+            };
+        };
+
+        ko.applyBindings(new ProductModel());
+    </script>
+}
